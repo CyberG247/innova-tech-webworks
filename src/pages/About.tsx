@@ -1,16 +1,8 @@
-
 import Hero from "@/components/Hero";
-
 const About = () => {
-  return (
-    <div>
+  return <div>
       {/* Hero Section */}
-      <Hero 
-        title="About InnovaTech" 
-        subtitle="Learn about our journey, mission, and vision for transforming businesses through technology"
-        backgroundImage="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-        ctaText=""
-      />
+      <Hero title="About InnovaTech" subtitle="Learn about our journey, mission, and vision for transforming businesses through technology" backgroundImage="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" ctaText="" />
 
       {/* Mission, Vision, Values Section */}
       <section className="py-20">
@@ -65,39 +57,19 @@ const About = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 md:pr-12">
               <h2 className="mb-6">Our Story</h2>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Founded in 2010, InnovaTech Consultancy LTD began as a small IT service provider in Dutse, Jigawa State. Our founder, with a passion for technology and a vision for digital transformation in Nigeria, started the company with just three employees focusing on basic web development services.
-              </p>
+              <p className="text-gray-700 dark:text-gray-300 mb-4">InnovaTech Consultancy LTD began as a small IT service provider in Dutse, Jigawa State. Our founder, with a passion for technology and a vision for digital transformation in Nigeria, started the company with just two employees focusing on basic web development services.</p>
               <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Over the years, we've grown into a comprehensive ICT solutions provider, expanding our services to include software development, mobile app development, CCTV installation, IP phone systems, and IT consultancy. Our team has expanded to include experts in various technology fields, all committed to delivering excellence.
               </p>
-              <p className="text-gray-700 dark:text-gray-300">
-                In 2018, we launched the InnovaTech Digital Institute to address the skills gap in the region and empower the next generation of tech professionals. Today, we serve clients across Nigeria, from government agencies to private businesses, helping them leverage technology to achieve their goals.
-              </p>
+              <p className="text-gray-700 dark:text-gray-300">In 2025, we launched the InnovaTech Digital Institute to address the skills gap in the region and empower the next generation of tech professionals. Today, we serve clients across Nigeria, from government agencies to private businesses, helping them leverage technology to achieve their goals.</p>
             </div>
             
             <div className="md:w-1/2">
               <div className="grid grid-cols-2 gap-4">
-                <img 
-                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="InnovaTech History" 
-                  className="rounded-lg shadow-md h-64 w-full object-cover"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1483058712412-4245e9b90334?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="InnovaTech Office" 
-                  className="rounded-lg shadow-md h-64 w-full object-cover"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="InnovaTech Team" 
-                  className="rounded-lg shadow-md h-64 w-full object-cover"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" 
-                  alt="InnovaTech Projects" 
-                  className="rounded-lg shadow-md h-64 w-full object-cover"
-                />
+                <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="InnovaTech History" className="rounded-lg shadow-md h-64 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1483058712412-4245e9b90334?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="InnovaTech Office" className="rounded-lg shadow-md h-64 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="InnovaTech Team" className="rounded-lg shadow-md h-64 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80" alt="InnovaTech Projects" className="rounded-lg shadow-md h-64 w-full object-cover" />
               </div>
             </div>
           </div>
@@ -150,45 +122,23 @@ const About = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img 
-                src="/lovable-uploads/id2BFP1vmt_logos.png" 
-                alt="Partner Logo" 
-                className="h-full object-contain"
-              />
+              <img src="/lovable-uploads/id2BFP1vmt_logos.png" alt="Partner Logo" className="h-full object-contain" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img 
-                src="/lovable-uploads/Untitled design.png" 
-                alt="Partner Logo" 
-                className="h-full object-contain"
-              />
+              <img src="/lovable-uploads/Untitled design.png" alt="Partner Logo" className="h-full object-contain" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img 
-                src="/lovable-uploads/logo.jpeg" 
-                alt="Partner Logo" 
-                className="h-full object-contain"
-              />
+              <img src="/lovable-uploads/logo.jpeg" alt="Partner Logo" className="h-full object-contain" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img 
-                src="/lovable-uploads/InnovaFoods & Beverages2.png" 
-                alt="Partner Logo" 
-                className="h-full object-contain"
-              />
+              <img src="/lovable-uploads/InnovaFoods & Beverages2.png" alt="Partner Logo" className="h-full object-contain" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img 
-                src="/lovable-uploads/JTVlogo.jpg" 
-                alt="Partner Logo" 
-                className="h-full object-contain"
-              />
+              <img src="/lovable-uploads/JTVlogo.jpg" alt="Partner Logo" className="h-full object-contain" />
             </div>
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
