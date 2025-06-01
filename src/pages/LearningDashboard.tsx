@@ -1,12 +1,17 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Book, Play, Download, Award, Clock, Users, CheckCircle, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Certificate from "@/components/Certificate";
+import { useReactToPrint } from 'react-to-print';
 
 const LearningDashboard = () => {
   const [enrollmentData, setEnrollmentData] = useState<any>(null);
   const [currentModule, setCurrentModule] = useState(1);
   const [completedLessons, setCompletedLessons] = useState<number[]>([1, 2, 3]);
+  const [showCertificate, setShowCertificate] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Get enrollment data from localStorage
@@ -51,11 +56,24 @@ const LearningDashboard = () => {
 
   const totalLessons = modules.reduce((acc, module) => acc + module.lessons.length, 0);
   const progress = (completedLessons.length / totalLessons) * 100;
+  const isCompleted = progress === 100;
 
   const markLessonComplete = (lessonId: number) => {
     if (!completedLessons.includes(lessonId)) {
       setCompletedLessons([...completedLessons, lessonId]);
     }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => certificateRef.current,
+  });
+
+  const downloadCertificate = () => {
+    setShowCertificate(true);
+    setTimeout(() => {
+      handlePrint();
+      setShowCertificate(false);
+    }, 100);
   };
 
   if (!enrollmentData) {
@@ -74,6 +92,21 @@ const LearningDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-innovatech-navy-dark">
+      {/* Certificate Component for Printing */}
+      {showCertificate && (
+        <div style={{ position: 'absolute', left: '-9999px' }}>
+          <Certificate
+            ref={certificateRef}
+            studentName={`${enrollmentData.firstName} ${enrollmentData.lastName}`}
+            courseName={enrollmentData.courseName}
+            completionDate={new Date().toLocaleDateString()}
+            instructorName="David Okafor"
+            courseHours="40 hours"
+            certificateId={`CERT-${Date.now()}`}
+          />
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white dark:bg-innovatech-navy-dark border-b">
         <div className="container mx-auto px-4 py-6">
@@ -154,6 +187,31 @@ const LearningDashboard = () => {
                 </div>
               </div>
 
+              {/* Certificate Download */}
+              {isCompleted && (
+                <Card className="mb-4 bg-green-50 border-green-200">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center text-green-800">
+                      <Award className="h-4 w-4 mr-2" />
+                      Congratulations!
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-xs text-green-700 mb-3">
+                      You've completed the course! Download your certificate below.
+                    </p>
+                    <Button 
+                      onClick={downloadCertificate}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                      size="sm"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Certificate
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
               <Button className="w-full bg-innovatech-red hover:bg-innovatech-red-dark mb-4">
                 Download Resources
               </Button>
@@ -166,21 +224,39 @@ const LearningDashboard = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            {/* Current Lesson */}
+            {/* Continue Learning or Completion Message */}
             <div className="bg-white dark:bg-innovatech-navy-dark rounded-lg shadow-md p-6 mb-8">
-              <h2 className="text-xl font-bold mb-4 dark:text-white">Continue Learning</h2>
-              <div className="bg-gradient-to-r from-innovatech-red to-innovatech-red-dark rounded-lg p-6 text-white">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold">HTML Structure and Semantics</h3>
-                    <p className="text-sm opacity-90">Module 1 • Lesson 4 • 30 minutes</p>
-                  </div>
-                  <Button className="bg-white text-innovatech-red hover:bg-gray-100">
-                    <Play className="h-4 w-4 mr-2" />
-                    Continue
+              {isCompleted ? (
+                <div className="text-center">
+                  <h2 className="text-xl font-bold mb-4 text-green-600">Course Completed! 🎉</h2>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
+                    Congratulations on completing {enrollmentData.courseName}! You can now download your certificate.
+                  </p>
+                  <Button 
+                    onClick={downloadCertificate}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <Award className="h-4 w-4 mr-2" />
+                    Download Certificate
                   </Button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <h2 className="text-xl font-bold mb-4 dark:text-white">Continue Learning</h2>
+                  <div className="bg-gradient-to-r from-innovatech-red to-innovatech-red-dark rounded-lg p-6 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold">HTML Structure and Semantics</h3>
+                        <p className="text-sm opacity-90">Module 1 • Lesson 4 • 30 minutes</p>
+                      </div>
+                      <Button className="bg-white text-innovatech-red hover:bg-gray-100">
+                        <Play className="h-4 w-4 mr-2" />
+                        Continue
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Modules */}

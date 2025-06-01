@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import AdminLogin from "@/components/AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit } from "lucide-react";
 
 const AdminPanel = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+
+  const handleLogin = (success: boolean) => {
+    setIsAuthenticated(success);
+  };
+
+  if (!isAuthenticated) {
+    return <AdminLogin onLogin={handleLogin} />;
+  }
 
   // Sample data for demonstration
   const students = [
@@ -30,9 +39,18 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-innovatech-navy-dark">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold dark:text-white">Admin Panel</h1>
-          <p className="text-gray-600 dark:text-gray-300">Manage your Digital Institute</p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold dark:text-white">Admin Panel</h1>
+            <p className="text-gray-600 dark:text-gray-300">Manage your Digital Institute</p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={() => setIsAuthenticated(false)}
+            className="text-red-600 border-red-600 hover:bg-red-50"
+          >
+            Logout
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
