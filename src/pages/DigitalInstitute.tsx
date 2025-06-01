@@ -1,7 +1,7 @@
-
 import Hero from "@/components/Hero";
 import CourseCard from "@/components/CourseCard";
 import { GraduationCap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const DigitalInstitute = () => {
   // Sample course categories
@@ -62,13 +62,79 @@ const DigitalInstitute = () => {
         subtitle="Empowering the next generation of professionals through quality education and practical skills development"
         backgroundImage="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
         ctaText="Explore Courses"
-        ctaLink="#courses"
+        ctaLink="/courses"
       />
 
       {/* Coming Soon Notification */}
       <div className="bg-innovatech-red text-white text-center py-6 px-4">
         <p className="text-xl font-bold">InnovaTech Digital Institute is currently undergoing a massive System upgrade for the Learning Management System, We apologize for the inconveniences caused & we assure you that the service will be restored soon....!</p>
       </div>
+
+      {/* Learning Process Section */}
+      <section className="py-20 bg-gray-50 dark:bg-innovatech-navy-dark/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="mb-4">Your Learning Journey</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Follow these simple steps to start your learning journey with InnovaTech Digital Institute.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
+              <div className="w-16 h-16 bg-innovatech-navy dark:bg-innovatech-red rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+                1
+              </div>
+              <h3 className="text-lg font-bold mb-2 dark:text-white">Browse Courses</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Explore our course catalog and find the right program for your goals.
+              </p>
+              <Link to="/courses">
+                <button className="btn-secondary">Start Browsing</button>
+              </Link>
+            </div>
+            
+            <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
+              <div className="w-16 h-16 bg-innovatech-navy dark:bg-innovatech-red rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+                2
+              </div>
+              <h3 className="text-lg font-bold mb-2 dark:text-white">Register Online</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Complete the online registration form with your details.
+              </p>
+              <Link to="/register">
+                <button className="btn-secondary">Register Now</button>
+              </Link>
+            </div>
+            
+            <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
+              <div className="w-16 h-16 bg-innovatech-navy dark:bg-innovatech-red rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+                3
+              </div>
+              <h3 className="text-lg font-bold mb-2 dark:text-white">Make Payment</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Secure your spot by completing the payment process.
+              </p>
+              <button className="btn-secondary" disabled>
+                Payment Portal
+              </button>
+            </div>
+            
+            <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
+              <div className="w-16 h-16 bg-innovatech-navy dark:bg-innovatech-red rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
+                4
+              </div>
+              <h3 className="text-lg font-bold mb-2 dark:text-white">Start Learning</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Access course materials and begin your learning journey.
+              </p>
+              <button className="btn-secondary" disabled>
+                Access Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* About Institute Section */}
       <section className="py-20">
@@ -134,7 +200,9 @@ const DigitalInstitute = () => {
                   <GraduationCap className="h-8 w-8 text-innovatech-navy dark:text-innovatech-red" />
                 </div>
                 <h3 className="text-xl font-bold mb-4 dark:text-white">{category.name}</h3>
-                <button className="btn-secondary mt-2">View Courses</button>
+                <Link to="/courses">
+                  <button className="btn-secondary mt-2">View Courses</button>
+                </Link>
               </div>
             ))}
           </div>
@@ -161,6 +229,14 @@ const DigitalInstitute = () => {
                 image={course.image}
               />
             ))}
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link to="/courses">
+              <button className="btn-primary bg-innovatech-red hover:bg-innovatech-red-dark">
+                View All Courses
+              </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -227,9 +303,11 @@ const DigitalInstitute = () => {
             Join thousands of students who have transformed their careers through our courses. 
             Enroll today and take the first step towards a brighter future.
           </p>
-          <button className="btn-primary bg-innovatech-red hover:bg-innovatech-red-dark">
-            Enroll Now
-          </button>
+          <Link to="/courses">
+            <button className="btn-primary bg-innovatech-red hover:bg-innovatech-red-dark">
+              Enroll Now
+            </button>
+          </Link>
         </div>
       </section>
     </div>
