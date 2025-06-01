@@ -88,22 +88,22 @@ const About = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
-              <div className="text-4xl font-bold text-innovatech-red mb-2">150+</div>
+              <div className="text-4xl font-bold text-innovatech-red mb-2">45</div>
               <p className="text-gray-600 dark:text-gray-300">Projects Completed</p>
             </div>
             
             <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
-              <div className="text-4xl font-bold text-innovatech-red mb-2">50+</div>
+              <div className="text-4xl font-bold text-innovatech-red mb-2">28</div>
               <p className="text-gray-600 dark:text-gray-300">Government Contracts</p>
             </div>
             
             <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
-              <div className="text-4xl font-bold text-innovatech-red mb-2">1000+</div>
+              <div className="text-4xl font-bold text-innovatech-red mb-2">99+</div>
               <p className="text-gray-600 dark:text-gray-300">Students Trained</p>
             </div>
             
             <div className="bg-white dark:bg-innovatech-navy-dark p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 text-center">
-              <div className="text-4xl font-bold text-innovatech-red mb-2">10+</div>
+              <div className="text-4xl font-bold text-innovatech-red mb-2">19</div>
               <p className="text-gray-600 dark:text-gray-300">Industry Awards</p>
             </div>
           </div>
@@ -122,19 +122,19 @@ const About = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img src="/lovable-uploads/id2BFP1vmt_logos.png" alt="Partner Logo" className="h-full object-contain" />
+              <img alt="Partner Logo" className="h-full object-contain" src="/lovable-uploads/8cfcec63-343f-48f9-970a-a49a632bb6d7.jpg" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img src="/lovable-uploads/Untitled design.png" alt="Partner Logo" className="h-full object-contain" />
+              <img alt="Partner Logo" className="h-full object-contain" src="/lovable-uploads/9032c0af-746f-48cf-a8c8-b83a567365de.jpg" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img src="/lovable-uploads/logo.jpeg" alt="Partner Logo" className="h-full object-contain" />
+              <img alt="Partner Logo" className="h-full object-contain" src="/lovable-uploads/4c4b71d3-a233-41d1-a474-b27d5cf78334.png" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img src="/lovable-uploads/InnovaFoods & Beverages2.png" alt="Partner Logo" className="h-full object-contain" />
+              <img alt="Partner Logo" className="h-full object-contain" src="/lovable-uploads/77a608be-108c-4940-8ed8-6cc90fec2a22.jpg" />
             </div>
             <div className="bg-white dark:bg-innovatech-navy-dark p-4 rounded-lg shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center h-24">
-              <img src="/lovable-uploads/JTVlogo.jpg" alt="Partner Logo" className="h-full object-contain" />
+              <img alt="Partner Logo" className="h-full object-contain" src="/lovable-uploads/0ef9b7df-62d2-40fb-93d7-734392985268.png" />
             </div>
           </div>
         </div>
