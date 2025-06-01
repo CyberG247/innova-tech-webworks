@@ -14,13 +14,15 @@ interface TeamMemberProps {
 const TeamMember = ({ name, role, bio, image, socialLinks }: TeamMemberProps) => {
   return (
     <div className="bg-white dark:bg-innovatech-navy-dark rounded-lg shadow-md overflow-hidden card-hover">
-      <div className="aspect-square overflow-hidden">
-        <img 
-          src={image} 
-          alt={name} 
-          className="w-full h-full object-cover object-center"
-        />
-      </div>
+      {image && (
+        <div className="aspect-square overflow-hidden">
+          <img 
+            src={image} 
+            alt={name} 
+            className="w-full h-full object-cover object-center"
+          />
+        </div>
+      )}
       <div className="p-6">
         <h3 className="text-xl font-bold mb-1 dark:text-white">{name}</h3>
         <p className="text-innovatech-red font-medium mb-3">{role}</p>

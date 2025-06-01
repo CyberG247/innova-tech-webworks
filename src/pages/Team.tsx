@@ -18,7 +18,7 @@ const Team = () => {
       name: "Yusuf Lawan Nuhu",
       role: "Chief Technology Officer",
       bio: "Yusuf oversees all technical aspects of the company, bringing his extensive experience in software architecture and system design.",
-      image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -29,7 +29,7 @@ const Team = () => {
       name: "Mohammed Yusuf",
       role: "Head of Business Development",
       bio: "Mohammed leads our business development initiatives, focusing on building strategic partnerships and expanding our market presence.",
-      image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -40,7 +40,7 @@ const Team = () => {
       name: "Amina Bello",
       role: "Digital Institute Director",
       bio: "As the Director of InnovaTech Digital Institute, Amina brings her passion for education and extensive experience in curriculum development.",
-      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -51,7 +51,7 @@ const Team = () => {
       name: "David Okafor",
       role: "Lead Web Developer",
       bio: "David leads our web development team, specializing in creating robust, scalable web applications for clients across various industries.",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -62,7 +62,7 @@ const Team = () => {
       name: "Fatima Hassan",
       role: "Mobile App Development Lead",
       bio: "Fatima heads our mobile app development team, bringing her expertise in creating intuitive, high-performance applications for iOS and Android.",
-      image: "https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -73,7 +73,7 @@ const Team = () => {
       name: "John Adeyemi",
       role: "Technical Operations Manager",
       bio: "John ensures the smooth operation of our technical infrastructure and oversees the implementation of CCTV and IP phone systems.",
-      image: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -84,7 +84,7 @@ const Team = () => {
       name: "Zainab Ali",
       role: "IT Consultancy Lead",
       bio: "Zainab leads our IT consultancy services, working closely with clients to develop and implement effective technology strategies.",
-      image: "https://images.unsplash.com/photo-1573497019236-61e7a0a28160?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+      image: "",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
