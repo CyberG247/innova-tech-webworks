@@ -18,7 +18,7 @@ const Team = () => {
       name: "Yusuf Lawan Nuhu",
       role: "Chief Technology Officer",
       bio: "Yusuf oversees all technical aspects of the company, bringing his extensive experience in software architecture and system design.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -29,7 +29,7 @@ const Team = () => {
       name: "Mohammed Yusuf",
       role: "Head of Business Development",
       bio: "Mohammed leads our business development initiatives, focusing on building strategic partnerships and expanding our market presence.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -40,7 +40,7 @@ const Team = () => {
       name: "Amina Bello",
       role: "Digital Institute Director",
       bio: "As the Director of InnovaTech Digital Institute, Amina brings her passion for education and extensive experience in curriculum development.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -51,7 +51,7 @@ const Team = () => {
       name: "David Okafor",
       role: "Lead Web Developer",
       bio: "David leads our web development team, specializing in creating robust, scalable web applications for clients across various industries.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -62,7 +62,7 @@ const Team = () => {
       name: "Fatima Hassan",
       role: "Mobile App Development Lead",
       bio: "Fatima heads our mobile app development team, bringing her expertise in creating intuitive, high-performance applications for iOS and Android.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -73,7 +73,7 @@ const Team = () => {
       name: "John Adeyemi",
       role: "Technical Operations Manager",
       bio: "John ensures the smooth operation of our technical infrastructure and oversees the implementation of CCTV and IP phone systems.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
@@ -84,7 +84,7 @@ const Team = () => {
       name: "Zainab Ali",
       role: "IT Consultancy Lead",
       bio: "Zainab leads our IT consultancy services, working closely with clients to develop and implement effective technology strategies.",
-      image: "",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       socialLinks: {
         twitter: "#",
         linkedin: "#",
