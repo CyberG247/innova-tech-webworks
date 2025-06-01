@@ -18,6 +18,7 @@ import CourseDetail from "./pages/CourseDetail";
 import Register from "./pages/Register";
 import Payment from "./pages/Payment";
 import LearningDashboard from "./pages/LearningDashboard";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
