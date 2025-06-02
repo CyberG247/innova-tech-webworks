@@ -65,7 +65,7 @@ const LearningDashboard = () => {
   };
 
   const handlePrint = useReactToPrint({
-    content: () => certificateRef.current,
+    contentRef: certificateRef,
   });
 
   const downloadCertificate = () => {
