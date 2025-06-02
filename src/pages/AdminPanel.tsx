@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import AdminLogin from "@/components/AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,15 +10,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit, Bell, CheckCircle, Clock, TrendingUp } from "lucide-react";
+import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit, Bell, CheckCircle, Clock, TrendingUp, Eye, Download } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from "recharts";
 import { useToast } from "@/hooks/use-toast";
+import Certificate from "@/components/Certificate";
+import { useReactToPrint } from "react-to-print";
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
+  const certificateRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [students, setStudents] = useState([
     { id: 1, name: "John Doe", email: "john@example.com", course: "Web Development", status: "Active", admissionDate: "2024-01-15", progress: 75, lastActive: "2024-06-01" },
@@ -61,8 +65,100 @@ const AdminPanel = () => {
     curriculum: ""
   });
 
+  const [editingStudent, setEditingStudent] = useState<any>(null);
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedCourse, setCertificateSelectedCourse] = useState("");
+  const [completionDate, setCompletionDate] = useState("");
+
   const handleLogin = (success: boolean) => {
     setIsAuthenticated(success);
+  };
+
+  // Certificate print handler
+  const handlePrintCertificate = useReactToPrint({
+    contentRef: certificateRef,
+    documentTitle: `Certificate-${selectedStudent}-${selectedCourse}`,
+  });
+
+  // New button handlers
+  const handleUploadTemplate = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleTemplateUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      toast({
+        title: "Template Uploaded",
+        description: `Certificate template "${file.name}" has been uploaded successfully.`,
+      });
+    }
+  };
+
+  const handleBulkGenerate = () => {
+    const completedStudents = students.filter(s => s.status === "Completed");
+    toast({
+      title: "Bulk Certificate Generation",
+      description: `Generated ${completedStudents.length} certificates for completed students.`,
+    });
+  };
+
+  const handleViewCertificate = (studentName: string, courseName: string) => {
+    setSelectedStudent(studentName);
+    setCertificateSelectedCourse(courseName);
+    setCompletionDate(new Date().toISOString().split('T')[0]);
+    
+    toast({
+      title: "Certificate Preview",
+      description: `Viewing certificate for ${studentName} in ${courseName}.`,
+    });
+  };
+
+  const handleDownloadCertificate = (studentName: string, courseName: string) => {
+    setSelectedStudent(studentName);
+    setCertificateSelectedCourse(courseName);
+    setCompletionDate(new Date().toISOString().split('T')[0]);
+    
+    // Trigger print after state is set
+    setTimeout(() => {
+      handlePrintCertificate();
+    }, 100);
+  };
+
+  const handleResendCertificate = (studentName: string, courseName: string) => {
+    toast({
+      title: "Certificate Resent",
+      description: `Certificate for ${studentName} (${courseName}) has been resent via email.`,
+    });
+  };
+
+  const handleEditStudent = (student: any) => {
+    setEditingStudent(student);
+    toast({
+      title: "Edit Mode",
+      description: `Editing ${student.name}'s information.`,
+    });
+  };
+
+  const handleViewPaymentDetails = (payment: any) => {
+    toast({
+      title: "Payment Details",
+      description: `Viewing payment details for ${payment.student} - ${payment.amount}`,
+    });
+  };
+
+  const handleEditCourse = (course: any) => {
+    toast({
+      title: "Edit Course",
+      description: `Editing ${course.title} course details.`,
+    });
+  };
+
+  const handleViewCourseDetails = (course: any) => {
+    toast({
+      title: "Course Details",
+      description: `Viewing detailed information for ${course.title}.`,
+    });
   };
 
   const handleAddStudent = () => {
@@ -122,10 +218,19 @@ const AdminPanel = () => {
   };
 
   const handleGenerateCertificate = () => {
-    toast({
-      title: "Certificate Generated",
-      description: "Certificate has been generated and sent to the student.",
-    });
+    if (selectedStudent && selectedCourse && completionDate) {
+      toast({
+        title: "Certificate Generated",
+        description: `Certificate generated for ${selectedStudent} in ${selectedCourse}.`,
+      });
+      handlePrintCertificate();
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please select student, course, and completion date.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handlePaymentApproval = (paymentId: number) => {
@@ -149,7 +254,6 @@ const AdminPanel = () => {
     ));
   };
 
-  // Chart data
   const monthlyRevenueData = [
     { month: "Jan", revenue: 3200000, students: 12 },
     { month: "Feb", revenue: 4100000, students: 18 },
@@ -205,6 +309,28 @@ const AdminPanel = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-innovatech-navy-dark">
+      {/* Hidden Certificate Component for Printing */}
+      <div className="hidden">
+        <Certificate
+          ref={certificateRef}
+          studentName={selectedStudent}
+          courseName={selectedCourse}
+          completionDate={completionDate}
+          instructorName="Dr. John Smith"
+          courseHours="40 hours"
+          certificateId={`CERT-${Date.now()}`}
+        />
+      </div>
+
+      {/* Hidden file input for template upload */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleTemplateUpload}
+        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+        className="hidden"
+      />
+
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex justify-between items-center">
           <div>
@@ -266,7 +392,6 @@ const AdminPanel = () => {
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
@@ -311,7 +436,6 @@ const AdminPanel = () => {
               </Card>
             </div>
 
-            {/* Recent Activities */}
             <Card>
               <CardHeader>
                 <CardTitle>Recent Activities</CardTitle>
@@ -339,7 +463,6 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
-          {/* Students Management Tab */}
           <TabsContent value="students" className="space-y-6">
             <Card>
               <CardHeader>
@@ -451,7 +574,11 @@ const AdminPanel = () => {
                         <TableCell>{student.lastActive}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleEditStudent(student)}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button 
@@ -471,7 +598,6 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
-          {/* Courses Management Tab */}
           <TabsContent value="courses" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {courses.map((course) => (
@@ -499,11 +625,21 @@ const AdminPanel = () => {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => handleEditCourse(course)}
+                      >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => handleViewCourseDetails(course)}
+                      >
                         View Details
                       </Button>
                     </div>
@@ -587,7 +723,6 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
-          {/* Finance Tab */}
           <TabsContent value="finance" className="space-y-6">
             <Card>
               <CardHeader>
@@ -634,7 +769,6 @@ const AdminPanel = () => {
                   </Card>
                 </div>
 
-                {/* Revenue Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   <Card>
                     <CardHeader>
@@ -689,7 +823,6 @@ const AdminPanel = () => {
                   </Card>
                 </div>
 
-                {/* Payment Notifications */}
                 <Card className="mb-6">
                   <CardHeader>
                     <CardTitle className="text-lg">Recent Payment Notifications</CardTitle>
@@ -741,7 +874,13 @@ const AdminPanel = () => {
                         <TableCell>{payment.date}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">View Details</Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleViewPaymentDetails(payment)}
+                            >
+                              View Details
+                            </Button>
                             {payment.status === "Pending" && (
                               <Button 
                                 size="sm" 
@@ -761,7 +900,6 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
-          {/* Certificates Tab */}
           <TabsContent value="certificates" className="space-y-6">
             <Card>
               <CardHeader>
@@ -770,15 +908,24 @@ const AdminPanel = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-4">
-                  <Button className="bg-red-600 hover:bg-red-700">
+                  <Button 
+                    className="bg-red-600 hover:bg-red-700"
+                    onClick={handleUploadTemplate}
+                  >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Certificate Template
                   </Button>
-                  <Button variant="outline" onClick={handleGenerateCertificate}>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleGenerateCertificate}
+                  >
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Certificate
                   </Button>
-                  <Button variant="outline">
+                  <Button 
+                    variant="outline"
+                    onClick={handleBulkGenerate}
+                  >
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Bulk Generate
                   </Button>
@@ -787,7 +934,7 @@ const AdminPanel = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="student-select">Select Student</Label>
-                    <Select>
+                    <Select value={selectedStudent} onValueChange={setSelectedStudent}>
                       <SelectTrigger>
                         <SelectValue placeholder="Choose student" />
                       </SelectTrigger>
@@ -802,20 +949,25 @@ const AdminPanel = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="course-select">Select Course</Label>
-                    <Select>
+                    <Select value={selectedCourse} onValueChange={setCertificateSelectedCourse}>
                       <SelectTrigger>
                         <SelectValue placeholder="Choose course" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="web-dev">Web Development</SelectItem>
-                        <SelectItem value="business">Business Strategy</SelectItem>
-                        <SelectItem value="law">Corporate Law</SelectItem>
+                        <SelectItem value="Web Development">Web Development</SelectItem>
+                        <SelectItem value="Business Strategy">Business Strategy</SelectItem>
+                        <SelectItem value="Corporate Law">Corporate Law</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="completion-date">Completion Date</Label>
-                    <Input type="date" id="completion-date" />
+                    <Input 
+                      type="date" 
+                      id="completion-date" 
+                      value={completionDate}
+                      onChange={(e) => setCompletionDate(e.target.value)}
+                    />
                   </div>
                 </div>
                 
@@ -824,7 +976,6 @@ const AdminPanel = () => {
                   Generate Certificate
                 </Button>
 
-                {/* Recent Certificates */}
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-4">Recent Certificates Issued</h3>
                   <div className="space-y-3">
@@ -835,9 +986,29 @@ const AdminPanel = () => {
                           <p className="text-sm text-gray-600">{student.course} - Completed on {student.admissionDate}</p>
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">View</Button>
-                          <Button size="sm" variant="outline">Download</Button>
-                          <Button size="sm" variant="outline">Resend</Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewCertificate(student.name, student.course)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleDownloadCertificate(student.name, student.course)}
+                          >
+                            <Download className="h-4 w-4 mr-1" />
+                            Download
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleResendCertificate(student.name, student.course)}
+                          >
+                            Resend
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -847,7 +1018,6 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
 
-          {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-6">
             <Card>
               <CardHeader>
