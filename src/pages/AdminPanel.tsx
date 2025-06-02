@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import AdminLogin from "@/components/AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,32 +10,106 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit } from "lucide-react";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [students, setStudents] = useState([
+    { id: 1, name: "John Doe", email: "john@example.com", course: "Web Development", status: "Active", admissionDate: "2024-01-15" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com", course: "Business Strategy", status: "Completed", admissionDate: "2024-02-01" },
+    { id: 3, name: "Mike Johnson", email: "mike@example.com", course: "Corporate Law", status: "Active", admissionDate: "2024-03-10" },
+  ]);
+
+  const [payments, setPayments] = useState([
+    { id: 1, student: "John Doe", course: "Web Development", amount: "₦150,000", status: "Paid", date: "2024-01-15" },
+    { id: 2, student: "Jane Smith", course: "Business Strategy", amount: "₦120,000", status: "Paid", date: "2024-02-01" },
+    { id: 3, student: "Mike Johnson", course: "Corporate Law", amount: "₦100,000", status: "Pending", date: "2024-03-10" },
+  ]);
+
+  const [newStudent, setNewStudent] = useState({
+    name: "",
+    email: "",
+    course: "",
+    status: "Active"
+  });
+
+  const [newCourse, setNewCourse] = useState({
+    title: "",
+    category: "",
+    duration: "",
+    price: "",
+    description: "",
+    curriculum: ""
+  });
 
   const handleLogin = (success: boolean) => {
     setIsAuthenticated(success);
   };
 
+  const handleAddStudent = () => {
+    if (newStudent.name && newStudent.email && newStudent.course) {
+      const student = {
+        id: students.length + 1,
+        ...newStudent,
+        admissionDate: new Date().toISOString().split('T')[0]
+      };
+      setStudents([...students, student]);
+      setNewStudent({ name: "", email: "", course: "", status: "Active" });
+    }
+  };
+
+  const handleDeleteStudent = (id: number) => {
+    setStudents(students.filter(student => student.id !== id));
+  };
+
+  const handleSaveCourse = () => {
+    console.log("Course saved:", newCourse);
+    setNewCourse({
+      title: "",
+      category: "",
+      duration: "",
+      price: "",
+      description: "",
+      curriculum: ""
+    });
+  };
+
+  const handleGenerateCertificate = () => {
+    console.log("Certificate generated");
+  };
+
+  // Chart data for Finance section
+  const monthlyRevenueData = [
+    { month: "Jan", revenue: 3200000 },
+    { month: "Feb", revenue: 4100000 },
+    { month: "Mar", revenue: 3800000 },
+    { month: "Apr", revenue: 5200000 },
+    { month: "May", revenue: 4600000 },
+    { month: "Jun", revenue: 5800000 },
+  ];
+
+  const courseRevenueData = [
+    { course: "Web Dev", revenue: 15000000 },
+    { course: "Business", revenue: 12000000 },
+    { course: "Law", revenue: 8000000 },
+    { course: "Finance", revenue: 6000000 },
+    { course: "Entrepreneurship", revenue: 4200000 },
+  ];
+
+  const chartConfig = {
+    revenue: {
+      label: "Revenue (₦)",
+      color: "#dc2626",
+    },
+  };
+
   if (!isAuthenticated) {
     return <AdminLogin onLogin={handleLogin} />;
   }
-
-  // Sample data for demonstration
-  const students = [
-    { id: 1, name: "John Doe", email: "john@example.com", course: "Web Development", status: "Active", admissionDate: "2024-01-15" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", course: "Business Strategy", status: "Completed", admissionDate: "2024-02-01" },
-    { id: 3, name: "Mike Johnson", email: "mike@example.com", course: "Corporate Law", status: "Active", admissionDate: "2024-03-10" },
-  ];
-
-  const payments = [
-    { id: 1, student: "John Doe", course: "Web Development", amount: "₦150,000", status: "Paid", date: "2024-01-15" },
-    { id: 2, student: "Jane Smith", course: "Business Strategy", amount: "₦120,000", status: "Paid", date: "2024-02-01" },
-    { id: 3, student: "Mike Johnson", course: "Corporate Law", amount: "₦100,000", status: "Pending", date: "2024-03-10" },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-innovatech-navy-dark">
@@ -71,7 +146,7 @@ const AdminPanel = () => {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">1,234</div>
+                  <div className="text-2xl font-bold">{students.length}</div>
                   <p className="text-xs text-muted-foreground">+20.1% from last month</p>
                 </CardContent>
               </Card>
@@ -131,10 +206,57 @@ const AdminPanel = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="bg-innovatech-red hover:bg-innovatech-red-dark">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Student
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-red-600 hover:bg-red-700">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Student
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New Student</DialogTitle>
+                        <DialogDescription>Enter student details below</DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="student-name">Name</Label>
+                          <Input 
+                            id="student-name"
+                            value={newStudent.name}
+                            onChange={(e) => setNewStudent({...newStudent, name: e.target.value})}
+                            placeholder="Enter student name" 
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="student-email">Email</Label>
+                          <Input 
+                            id="student-email"
+                            type="email"
+                            value={newStudent.email}
+                            onChange={(e) => setNewStudent({...newStudent, email: e.target.value})}
+                            placeholder="Enter student email" 
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="student-course">Course</Label>
+                          <Select value={newStudent.course} onValueChange={(value) => setNewStudent({...newStudent, course: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select course" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Web Development">Web Development</SelectItem>
+                              <SelectItem value="Business Strategy">Business Strategy</SelectItem>
+                              <SelectItem value="Corporate Law">Corporate Law</SelectItem>
+                              <SelectItem value="Finance">Finance</SelectItem>
+                              <SelectItem value="Entrepreneurship">Entrepreneurship</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button onClick={handleAddStudent} className="w-full">Add Student</Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 <Table>
                   <TableHeader>
@@ -164,7 +286,11 @@ const AdminPanel = () => {
                             <Button variant="outline" size="sm">
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleDeleteStudent(student.id)}
+                            >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -185,18 +311,19 @@ const AdminPanel = () => {
                 <CardDescription>Add, edit, and manage course content</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button className="bg-innovatech-red hover:bg-innovatech-red-dark">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add New Course
-                </Button>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="course-title">Course Title</Label>
-                    <Input id="course-title" placeholder="Enter course title" />
+                    <Input 
+                      id="course-title" 
+                      value={newCourse.title}
+                      onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
+                      placeholder="Enter course title" 
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="course-category">Category</Label>
-                    <Select>
+                    <Select value={newCourse.category} onValueChange={(value) => setNewCourse({...newCourse, category: value})}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -212,22 +339,43 @@ const AdminPanel = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="course-duration">Duration</Label>
-                    <Input id="course-duration" placeholder="e.g., 12 weeks" />
+                    <Input 
+                      id="course-duration" 
+                      value={newCourse.duration}
+                      onChange={(e) => setNewCourse({...newCourse, duration: e.target.value})}
+                      placeholder="e.g., 12 weeks" 
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="course-price">Price</Label>
-                    <Input id="course-price" placeholder="e.g., ₦150,000" />
+                    <Input 
+                      id="course-price" 
+                      value={newCourse.price}
+                      onChange={(e) => setNewCourse({...newCourse, price: e.target.value})}
+                      placeholder="e.g., ₦150,000" 
+                    />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="course-description">Description</Label>
-                  <Textarea id="course-description" placeholder="Enter course description" />
+                  <Textarea 
+                    id="course-description" 
+                    value={newCourse.description}
+                    onChange={(e) => setNewCourse({...newCourse, description: e.target.value})}
+                    placeholder="Enter course description" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="course-curriculum">Curriculum</Label>
-                  <Textarea id="course-curriculum" placeholder="Enter course curriculum" rows={6} />
+                  <Textarea 
+                    id="course-curriculum" 
+                    value={newCourse.curriculum}
+                    onChange={(e) => setNewCourse({...newCourse, curriculum: e.target.value})}
+                    placeholder="Enter course curriculum" 
+                    rows={6} 
+                  />
                 </div>
-                <Button>Save Course</Button>
+                <Button onClick={handleSaveCourse}>Save Course</Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -266,6 +414,54 @@ const AdminPanel = () => {
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Revenue Charts */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Monthly Revenue</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer config={chartConfig} className="h-[300px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={monthlyRevenueData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`} />
+                            <ChartTooltip 
+                              content={<ChartTooltipContent />} 
+                              formatter={(value) => [`₦${Number(value).toLocaleString()}`, "Revenue"]}
+                            />
+                            <Bar dataKey="revenue" fill="#dc2626" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </ChartContainer>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Revenue by Course</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer config={chartConfig} className="h-[300px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={courseRevenueData} layout="horizontal">
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`} />
+                            <YAxis dataKey="course" type="category" />
+                            <ChartTooltip 
+                              content={<ChartTooltipContent />} 
+                              formatter={(value) => [`₦${Number(value).toLocaleString()}`, "Revenue"]}
+                            />
+                            <Bar dataKey="revenue" fill="#dc2626" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </ChartContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -309,11 +505,11 @@ const AdminPanel = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-4">
-                  <Button className="bg-innovatech-red hover:bg-innovatech-red-dark">
+                  <Button className="bg-red-600 hover:bg-red-700">
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Certificate Template
                   </Button>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleGenerateCertificate}>
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Certificate
                   </Button>
@@ -326,9 +522,11 @@ const AdminPanel = () => {
                         <SelectValue placeholder="Choose student" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="john">John Doe</SelectItem>
-                        <SelectItem value="jane">Jane Smith</SelectItem>
-                        <SelectItem value="mike">Mike Johnson</SelectItem>
+                        {students.map((student) => (
+                          <SelectItem key={student.id} value={student.name}>
+                            {student.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -346,7 +544,7 @@ const AdminPanel = () => {
                     </Select>
                   </div>
                 </div>
-                <Button>Generate Certificate</Button>
+                <Button onClick={handleGenerateCertificate}>Generate Certificate</Button>
               </CardContent>
             </Card>
           </TabsContent>
