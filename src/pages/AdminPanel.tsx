@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import AdminLogin from "@/components/AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,23 +10,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit } from "lucide-react";
+import { Users, GraduationCap, DollarSign, FileText, Upload, Plus, Trash2, Edit, Bell, CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line } from "recharts";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminPanel = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const { toast } = useToast();
+  
   const [students, setStudents] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", course: "Web Development", status: "Active", admissionDate: "2024-01-15" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", course: "Business Strategy", status: "Completed", admissionDate: "2024-02-01" },
-    { id: 3, name: "Mike Johnson", email: "mike@example.com", course: "Corporate Law", status: "Active", admissionDate: "2024-03-10" },
+    { id: 1, name: "John Doe", email: "john@example.com", course: "Web Development", status: "Active", admissionDate: "2024-01-15", progress: 75, lastActive: "2024-06-01" },
+    { id: 2, name: "Jane Smith", email: "jane@example.com", course: "Business Strategy", status: "Completed", admissionDate: "2024-02-01", progress: 100, lastActive: "2024-05-30" },
+    { id: 3, name: "Mike Johnson", email: "mike@example.com", course: "Corporate Law", status: "Active", admissionDate: "2024-03-10", progress: 45, lastActive: "2024-06-02" },
   ]);
 
   const [payments, setPayments] = useState([
-    { id: 1, student: "John Doe", course: "Web Development", amount: "₦150,000", status: "Paid", date: "2024-01-15" },
-    { id: 2, student: "Jane Smith", course: "Business Strategy", amount: "₦120,000", status: "Paid", date: "2024-02-01" },
-    { id: 3, student: "Mike Johnson", course: "Corporate Law", amount: "₦100,000", status: "Pending", date: "2024-03-10" },
+    { id: 1, student: "John Doe", course: "Web Development", amount: "₦200,000", status: "Paid", date: "2024-01-15", method: "Bank Transfer" },
+    { id: 2, student: "Jane Smith", course: "Business Strategy", amount: "₦180,000", status: "Paid", date: "2024-02-01", method: "Card Payment" },
+    { id: 3, student: "Mike Johnson", course: "Corporate Law", amount: "₦150,000", status: "Pending", date: "2024-03-10", method: "Bank Transfer" },
+  ]);
+
+  const [notifications, setNotifications] = useState([
+    { id: 1, type: "payment", message: "John Doe paid ₦200,000 for Web Development course", time: "2 hours ago", read: false },
+    { id: 2, type: "enrollment", message: "New student Mike Johnson enrolled in Corporate Law", time: "5 hours ago", read: false },
+    { id: 3, type: "completion", message: "Jane Smith completed Business Strategy course", time: "1 day ago", read: true },
+    { id: 4, type: "payment", message: "Sarah Wilson paid ₦180,000 for Digital Marketing course", time: "2 days ago", read: true },
+  ]);
+
+  const [courses, setCourses] = useState([
+    { id: 1, title: "Web Development", students: 45, revenue: "₦9,000,000", completion: 78, rating: 4.8 },
+    { id: 2, title: "Business Strategy", students: 32, revenue: "₦5,760,000", completion: 85, rating: 4.9 },
+    { id: 3, title: "Corporate Law", students: 28, revenue: "₦4,200,000", completion: 71, rating: 4.7 },
   ]);
 
   const [newStudent, setNewStudent] = useState({
@@ -55,55 +70,132 @@ const AdminPanel = () => {
       const student = {
         id: students.length + 1,
         ...newStudent,
-        admissionDate: new Date().toISOString().split('T')[0]
+        admissionDate: new Date().toISOString().split('T')[0],
+        progress: 0,
+        lastActive: new Date().toISOString().split('T')[0]
       };
       setStudents([...students, student]);
       setNewStudent({ name: "", email: "", course: "", status: "Active" });
+      
+      toast({
+        title: "Student Added",
+        description: `${newStudent.name} has been successfully enrolled.`,
+      });
     }
   };
 
   const handleDeleteStudent = (id: number) => {
+    const studentName = students.find(s => s.id === id)?.name;
     setStudents(students.filter(student => student.id !== id));
-  };
-
-  const handleSaveCourse = () => {
-    console.log("Course saved:", newCourse);
-    setNewCourse({
-      title: "",
-      category: "",
-      duration: "",
-      price: "",
-      description: "",
-      curriculum: ""
+    
+    toast({
+      title: "Student Removed",
+      description: `${studentName} has been removed from the system.`,
     });
   };
 
-  const handleGenerateCertificate = () => {
-    console.log("Certificate generated");
+  const handleSaveCourse = () => {
+    if (newCourse.title && newCourse.category && newCourse.price) {
+      const course = {
+        id: courses.length + 1,
+        title: newCourse.title,
+        students: 0,
+        revenue: "₦0",
+        completion: 0,
+        rating: 0
+      };
+      setCourses([...courses, course]);
+      setNewCourse({
+        title: "",
+        category: "",
+        duration: "",
+        price: "",
+        description: "",
+        curriculum: ""
+      });
+      
+      toast({
+        title: "Course Created",
+        description: `${newCourse.title} has been successfully created.`,
+      });
+    }
   };
 
-  // Chart data for Finance section
+  const handleGenerateCertificate = () => {
+    toast({
+      title: "Certificate Generated",
+      description: "Certificate has been generated and sent to the student.",
+    });
+  };
+
+  const handlePaymentApproval = (paymentId: number) => {
+    setPayments(payments.map(payment => 
+      payment.id === paymentId 
+        ? { ...payment, status: "Paid" }
+        : payment
+    ));
+    
+    toast({
+      title: "Payment Approved",
+      description: "Payment has been approved and updated.",
+    });
+  };
+
+  const markNotificationAsRead = (notificationId: number) => {
+    setNotifications(notifications.map(notif => 
+      notif.id === notificationId 
+        ? { ...notif, read: true }
+        : notif
+    ));
+  };
+
+  // Chart data
   const monthlyRevenueData = [
-    { month: "Jan", revenue: 3200000 },
-    { month: "Feb", revenue: 4100000 },
-    { month: "Mar", revenue: 3800000 },
-    { month: "Apr", revenue: 5200000 },
-    { month: "May", revenue: 4600000 },
-    { month: "Jun", revenue: 5800000 },
+    { month: "Jan", revenue: 3200000, students: 12 },
+    { month: "Feb", revenue: 4100000, students: 18 },
+    { month: "Mar", revenue: 3800000, students: 15 },
+    { month: "Apr", revenue: 5200000, students: 22 },
+    { month: "May", revenue: 4600000, students: 19 },
+    { month: "Jun", revenue: 5800000, students: 25 },
   ];
 
   const courseRevenueData = [
-    { course: "Web Dev", revenue: 15000000 },
-    { course: "Business", revenue: 12000000 },
-    { course: "Law", revenue: 8000000 },
-    { course: "Finance", revenue: 6000000 },
-    { course: "Entrepreneurship", revenue: 4200000 },
+    { course: "Web Dev", revenue: 15000000, students: 45 },
+    { course: "Business", revenue: 12000000, students: 32 },
+    { course: "Law", revenue: 8000000, students: 28 },
+    { course: "Finance", revenue: 6000000, students: 20 },
+    { course: "Marketing", revenue: 4200000, students: 15 },
+  ];
+
+  const studentEngagementData = [
+    { month: "Jan", active: 85, completed: 12, enrolled: 20 },
+    { month: "Feb", active: 92, completed: 18, enrolled: 25 },
+    { month: "Mar", active: 88, completed: 15, enrolled: 22 },
+    { month: "Apr", active: 95, completed: 22, enrolled: 30 },
+    { month: "May", active: 91, completed: 19, enrolled: 28 },
+    { month: "Jun", active: 97, completed: 25, enrolled: 35 },
   ];
 
   const chartConfig = {
     revenue: {
       label: "Revenue (₦)",
       color: "#dc2626",
+    },
+    students: {
+      label: "Students",
+      color: "#2563eb",
+    },
+    active: {
+      label: "Active Students",
+      color: "#16a34a",
+    },
+    completed: {
+      label: "Completed",
+      color: "#dc2626",
+    },
+    enrolled: {
+      label: "New Enrollments",
+      color: "#ca8a04",
     },
   };
 
@@ -119,22 +211,59 @@ const AdminPanel = () => {
             <h1 className="text-3xl font-bold dark:text-white">Admin Panel</h1>
             <p className="text-gray-600 dark:text-gray-300">Manage your Digital Institute</p>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={() => setIsAuthenticated(false)}
-            className="text-red-600 border-red-600 hover:bg-red-50"
-          >
-            Logout
-          </Button>
+          <div className="flex items-center space-x-4">
+            {/* Notifications */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="relative">
+                  <Bell className="h-4 w-4" />
+                  {notifications.filter(n => !n.read).length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notifications.filter(n => !n.read).length}
+                    </span>
+                  )}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Notifications</DialogTitle>
+                  <DialogDescription>Recent activity in your institute</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 max-h-64 overflow-y-auto">
+                  {notifications.map((notification) => (
+                    <div 
+                      key={notification.id}
+                      className={`p-3 rounded-lg border cursor-pointer ${
+                        notification.read ? 'bg-gray-50' : 'bg-blue-50 border-blue-200'
+                      }`}
+                      onClick={() => markNotificationAsRead(notification.id)}
+                    >
+                      <p className="text-sm font-medium">{notification.message}</p>
+                      <p className="text-xs text-gray-500">{notification.time}</p>
+                    </div>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => setIsAuthenticated(false)}
+              className="text-red-600 border-red-600 hover:bg-red-50"
+            >
+              Logout
+            </Button>
+          </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="courses">Courses</TabsTrigger>
             <TabsTrigger value="finance">Finance</TabsTrigger>
             <TabsTrigger value="certificates">Certificates</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -156,7 +285,7 @@ const AdminPanel = () => {
                   <GraduationCap className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">6</div>
+                  <div className="text-2xl font-bold">{courses.length}</div>
                   <p className="text-xs text-muted-foreground">+2 new this month</p>
                 </CardContent>
               </Card>
@@ -181,6 +310,33 @@ const AdminPanel = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Recent Activities */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {notifications.slice(0, 5).map((notification) => (
+                    <div key={notification.id} className="flex items-center space-x-4">
+                      <div className={`p-2 rounded-full ${
+                        notification.type === 'payment' ? 'bg-green-100' : 
+                        notification.type === 'enrollment' ? 'bg-blue-100' : 'bg-purple-100'
+                      }`}>
+                        {notification.type === 'payment' && <DollarSign className="h-4 w-4 text-green-600" />}
+                        {notification.type === 'enrollment' && <Users className="h-4 w-4 text-blue-600" />}
+                        {notification.type === 'completion' && <CheckCircle className="h-4 w-4 text-purple-600" />}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">{notification.message}</p>
+                        <p className="text-xs text-gray-500">{notification.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Students Management Tab */}
@@ -264,8 +420,9 @@ const AdminPanel = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Course</TableHead>
+                      <TableHead>Progress</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Admission Date</TableHead>
+                      <TableHead>Last Active</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -276,11 +433,22 @@ const AdminPanel = () => {
                         <TableCell>{student.email}</TableCell>
                         <TableCell>{student.course}</TableCell>
                         <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-blue-600 h-2 rounded-full" 
+                                style={{ width: `${student.progress}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-sm">{student.progress}%</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <Badge variant={student.status === "Active" ? "default" : "secondary"}>
                             {student.status}
                           </Badge>
                         </TableCell>
-                        <TableCell>{student.admissionDate}</TableCell>
+                        <TableCell>{student.lastActive}</TableCell>
                         <TableCell>
                           <div className="flex gap-2">
                             <Button variant="outline" size="sm">
@@ -305,10 +473,49 @@ const AdminPanel = () => {
 
           {/* Courses Management Tab */}
           <TabsContent value="courses" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {courses.map((course) => (
+                <Card key={course.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{course.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Students:</span>
+                        <span className="font-medium">{course.students}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Revenue:</span>
+                        <span className="font-medium">{course.revenue}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Completion:</span>
+                        <span className="font-medium">{course.completion}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Rating:</span>
+                        <span className="font-medium">{course.rating}⭐</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <Button size="sm" variant="outline" className="flex-1">
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button size="sm" variant="outline" className="flex-1">
+                        View Details
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
             <Card>
               <CardHeader>
-                <CardTitle>Course Management</CardTitle>
-                <CardDescription>Add, edit, and manage course content</CardDescription>
+                <CardTitle>Add New Course</CardTitle>
+                <CardDescription>Create a new course for your institute</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -384,17 +591,18 @@ const AdminPanel = () => {
           <TabsContent value="finance" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Financial Management</CardTitle>
-                <CardDescription>Monitor payments and revenue</CardDescription>
+                <CardTitle>Financial Overview</CardTitle>
+                <CardDescription>Monitor payments and revenue analytics</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm">Total Revenue</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-green-600">₦45,200,000</div>
+                      <p className="text-xs text-green-500">+15.3% from last month</p>
                     </CardContent>
                   </Card>
                   <Card>
@@ -403,6 +611,7 @@ const AdminPanel = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-orange-600">₦2,100,000</div>
+                      <p className="text-xs text-orange-500">3 pending approvals</p>
                     </CardContent>
                   </Card>
                   <Card>
@@ -411,6 +620,16 @@ const AdminPanel = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-blue-600">₦8,400,000</div>
+                      <p className="text-xs text-blue-500">25 new enrollments</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Average Order</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold text-purple-600">₦165,000</div>
+                      <p className="text-xs text-purple-500">+5.2% from last month</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -419,7 +638,7 @@ const AdminPanel = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg">Monthly Revenue</CardTitle>
+                      <CardTitle className="text-lg">Monthly Revenue & Students</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ChartContainer config={chartConfig} className="h-[300px]">
@@ -427,12 +646,20 @@ const AdminPanel = () => {
                           <BarChart data={monthlyRevenueData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="month" />
-                            <YAxis tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`} />
+                            <YAxis 
+                              yAxisId="left"
+                              tickFormatter={(value) => `₦${(value / 1000000).toFixed(1)}M`} 
+                            />
+                            <YAxis yAxisId="right" orientation="right" />
                             <ChartTooltip 
                               content={<ChartTooltipContent />} 
-                              formatter={(value) => [`₦${Number(value).toLocaleString()}`, "Revenue"]}
+                              formatter={(value, name) => [
+                                name === 'revenue' ? `₦${Number(value).toLocaleString()}` : value,
+                                name === 'revenue' ? 'Revenue' : 'Students'
+                              ]}
                             />
-                            <Bar dataKey="revenue" fill="#dc2626" />
+                            <Bar yAxisId="left" dataKey="revenue" fill="#dc2626" />
+                            <Bar yAxisId="right" dataKey="students" fill="#2563eb" />
                           </BarChart>
                         </ResponsiveContainer>
                       </ChartContainer>
@@ -462,12 +689,38 @@ const AdminPanel = () => {
                   </Card>
                 </div>
 
+                {/* Payment Notifications */}
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Recent Payment Notifications</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {notifications.filter(n => n.type === 'payment').slice(0, 3).map((notification) => (
+                        <div key={notification.id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                          <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-green-100 rounded-full">
+                              <DollarSign className="h-4 w-4 text-green-600" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-green-800">{notification.message}</p>
+                              <p className="text-sm text-green-600">{notification.time}</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-green-600">New Payment</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Student</TableHead>
                       <TableHead>Course</TableHead>
                       <TableHead>Amount</TableHead>
+                      <TableHead>Method</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Actions</TableHead>
@@ -478,7 +731,8 @@ const AdminPanel = () => {
                       <TableRow key={payment.id}>
                         <TableCell className="font-medium">{payment.student}</TableCell>
                         <TableCell>{payment.course}</TableCell>
-                        <TableCell>{payment.amount}</TableCell>
+                        <TableCell className="font-semibold">{payment.amount}</TableCell>
+                        <TableCell>{payment.method}</TableCell>
                         <TableCell>
                           <Badge variant={payment.status === "Paid" ? "default" : "destructive"}>
                             {payment.status}
@@ -486,7 +740,18 @@ const AdminPanel = () => {
                         </TableCell>
                         <TableCell>{payment.date}</TableCell>
                         <TableCell>
-                          <Button variant="outline" size="sm">View Details</Button>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm">View Details</Button>
+                            {payment.status === "Pending" && (
+                              <Button 
+                                size="sm" 
+                                className="bg-green-600 hover:bg-green-700"
+                                onClick={() => handlePaymentApproval(payment.id)}
+                              >
+                                Approve
+                              </Button>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -513,8 +778,13 @@ const AdminPanel = () => {
                     <FileText className="h-4 w-4 mr-2" />
                     Generate Certificate
                   </Button>
+                  <Button variant="outline">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Bulk Generate
+                  </Button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="student-select">Select Student</Label>
                     <Select>
@@ -522,7 +792,7 @@ const AdminPanel = () => {
                         <SelectValue placeholder="Choose student" />
                       </SelectTrigger>
                       <SelectContent>
-                        {students.map((student) => (
+                        {students.filter(s => s.status === "Completed").map((student) => (
                           <SelectItem key={student.id} value={student.name}>
                             {student.name}
                           </SelectItem>
@@ -543,10 +813,111 @@ const AdminPanel = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="completion-date">Completion Date</Label>
+                    <Input type="date" id="completion-date" />
+                  </div>
                 </div>
-                <Button onClick={handleGenerateCertificate}>Generate Certificate</Button>
+                
+                <Button onClick={handleGenerateCertificate} className="w-full md:w-auto">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Generate Certificate
+                </Button>
+
+                {/* Recent Certificates */}
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold mb-4">Recent Certificates Issued</h3>
+                  <div className="space-y-3">
+                    {students.filter(s => s.status === "Completed").map((student) => (
+                      <div key={student.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div>
+                          <p className="font-medium">{student.name}</p>
+                          <p className="text-sm text-gray-600">{student.course} - Completed on {student.admissionDate}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline">View</Button>
+                          <Button size="sm" variant="outline">Download</Button>
+                          <Button size="sm" variant="outline">Resend</Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Student Engagement Analytics</CardTitle>
+                <CardDescription>Track student progress and engagement metrics</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer config={chartConfig} className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={studentEngagementData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="month" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Line type="monotone" dataKey="active" stroke="#16a34a" strokeWidth={2} />
+                      <Line type="monotone" dataKey="completed" stroke="#dc2626" strokeWidth={2} />
+                      <Line type="monotone" dataKey="enrolled" stroke="#ca8a04" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {courses.map((course) => (
+                      <div key={course.id} className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">{course.title}</p>
+                          <p className="text-sm text-gray-600">{course.students} students</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">{course.completion}% completion</p>
+                          <p className="text-sm text-gray-600">{course.rating}⭐ rating</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Top Performing Students</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {students.sort((a, b) => b.progress - a.progress).slice(0, 5).map((student) => (
+                      <div key={student.id} className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">{student.name}</p>
+                          <p className="text-sm text-gray-600">{student.course}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">{student.progress}%</p>
+                          <Badge variant={student.status === "Completed" ? "default" : "secondary"}>
+                            {student.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
