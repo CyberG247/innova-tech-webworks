@@ -1,5 +1,5 @@
 
-import { MessageCircle, Instagram } from "lucide-react";
+import { Phone, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FloatingSocialButtons = () => {
@@ -22,19 +22,20 @@ const FloatingSocialButtons = () => {
       {/* WhatsApp Button */}
       <Button
         onClick={handleWhatsAppClick}
-        className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl transition-all duration-300 p-0 flex items-center justify-center"
+        className="w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#128C7E] shadow-lg hover:shadow-xl transition-all duration-300 p-0 flex items-center justify-center border-2 border-white"
         aria-label="Contact us on WhatsApp"
       >
-        <MessageCircle className="h-6 w-6 text-white" />
+        <Phone className="h-6 w-6 text-white" />
       </Button>
 
       {/* Instagram Button */}
       <Button
         onClick={handleInstagramClick}
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 hover:from-purple-600 hover:via-pink-600 hover:to-orange-500 shadow-lg hover:shadow-xl transition-all duration-300 p-0 flex items-center justify-center"
+        className="w-14 h-14 rounded-full bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] via-[#F77737] to-[#FCCC63] hover:shadow-xl transition-all duration-300 p-0 flex items-center justify-center border-2 border-white relative overflow-hidden"
         aria-label="Follow us on Instagram"
       >
-        <Instagram className="h-6 w-6 text-white" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#405DE6] via-[#5B51D8] via-[#833AB4] via-[#C13584] via-[#E1306C] via-[#FD1D1D] to-[#F56040] opacity-90"></div>
+        <Instagram className="h-6 w-6 text-white relative z-10" />
       </Button>
     </div>
   );
