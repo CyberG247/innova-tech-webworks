@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import FloatingSocialButtons from "./components/FloatingSocialButtons";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -50,6 +51,7 @@ const App = () => (
               </Routes>
             </main>
             <Footer />
+            <FloatingSocialButtons />
           </div>
         </BrowserRouter>
       </TooltipProvider>
